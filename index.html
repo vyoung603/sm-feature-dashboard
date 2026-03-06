@@ -169,27 +169,27 @@
 
 <div class="kpi-row">
   <div class="kpi-card good">
-    <div class="kpi-label">Weekly App Opens</div>
+    <div class="kpi-label">Weekly App Openers</div>
     <div class="kpi-value">~22K</div>
-    <div class="kpi-delta up">Steady, growing since Sep</div>
+    <div class="kpi-delta up">Growing from ~19K (Sep) to ~23K (Feb)</div>
     <div class="kpi-note">Unique users opening the app per week</div>
-  </div>
-  <div class="kpi-card good">
-    <div class="kpi-label">Weekly Session Schedulers</div>
-    <div class="kpi-value">~31K</div>
-    <div class="kpi-note">Core therapy loop -- the reason people are here</div>
   </div>
   <div class="kpi-card">
     <div class="kpi-label">Goal Creators / App Openers</div>
-    <div class="kpi-value">9.5%</div>
-    <div class="kpi-delta down">~2K of ~22K weekly app users</div>
-    <div class="kpi-note">Moderate adoption for a secondary feature</div>
+    <div class="kpi-value">6.7%</div>
+    <div class="kpi-delta down">~1.5K of ~23K (current); was 9.5% avg</div>
+    <div class="kpi-note">Declining from 14% in Sep</div>
   </div>
   <div class="kpi-card warn">
     <div class="kpi-label">Reflection Savers / App Openers</div>
-    <div class="kpi-value">2.4%</div>
-    <div class="kpi-delta down">~530 of ~22K weekly app users</div>
-    <div class="kpi-note">Very small engaged audience</div>
+    <div class="kpi-value">2.2%</div>
+    <div class="kpi-delta down">~490 of ~23K (current)</div>
+    <div class="kpi-note">Small engaged audience, declining</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Mood + Journal / App Openers</div>
+    <div class="kpi-value">~3.5%</div>
+    <div class="kpi-note">~340 mood + ~450 journal users/wk (overlap likely)</div>
   </div>
   <div class="kpi-card danger">
     <div class="kpi-label">Goal Retention (D7-14)</div>
@@ -219,23 +219,23 @@
 <!-- APP CONTEXT SECTION -->
 <div id="appcontext" class="section active">
   <div class="insight-box" style="border-left-color: var(--sage);">
-    <h3 style="color: var(--sage);">What Are SonderMind App Users Actually Doing?</h3>
+    <h3 style="color: var(--sage);">What Are People Doing When They Open the App?</h3>
     <ul>
-      <li><strong>The core loop is therapy sessions.</strong> ~31K users/week schedule sessions, ~30K start telehealth. This is the primary value prop -- everything else is secondary.</li>
-      <li><strong>~22K users/week open the app.</strong> Of those, ~5-6K complete match flows (finding a therapist) and ~5.5K send chat messages to providers.</li>
-      <li><strong>AI Coach launched mid-Dec 2025.</strong> Coach Home Module went from near-zero to ~27K viewers/week, but actual coach conversations are only ~700-800/week (text) and ~100-130/week (voice). Massive awareness, very low activation.</li>
-      <li><strong>Direct Booking is the breakout feature.</strong> Launched Oct 2025, grew from 0 to ~25K events/week by Jan 2026 -- fastest-growing feature in the app.</li>
+      <li><strong>~22K users/week open the app</strong> (trending up from ~19K in Sep to ~23K in Jan-Feb). This is the denominator for all feature penetration.</li>
+      <li><strong>Modules are the primary surface.</strong> ~20-25K users/week view modules, ~15-22K view the Prep Module. These are the most-seen in-app experiences.</li>
+      <li><strong>Goal setting is the most-used engagement action</strong> at ~1.5-2.7K creators/week (declining from 14% to 6.7% of app openers), followed by reflections (~490 savers/week, 2.2%), journal (~450/week, 2.0%), and mood (~340/week, 1.5%).</li>
+      <li><strong>All engagement features are declining</strong> even as app opens grow. The app is getting more users but fewer are engaging with goals, reflections, mood, or journal. For reference, AI Coach text conversations (~800/week, 3.5%) now sit between goals and reflections in raw users.</li>
     </ul>
   </div>
   <div class="chart-grid">
     <div class="chart-card full-width">
-      <h3>The Core Therapy Loop: Weekly Users</h3>
-      <div class="chart-desc">Session scheduling, telehealth starts, match flow, and app opens -- the primary use cases</div>
+      <h3>App Opens and In-App Feature Usage: Weekly Users</h3>
+      <div class="chart-desc">App openers as the base, with major in-app features layered on top</div>
       <canvas id="coreLoop"></canvas>
     </div>
     <div class="chart-card">
       <h3>Feature Penetration: % of App Openers</h3>
-      <div class="chart-desc">What share of weekly app openers engage with each feature?</div>
+      <div class="chart-desc">What share of weekly app openers engage with each in-app feature? (last 4 weeks avg)</div>
       <canvas id="penetrationBar"></canvas>
     </div>
     <div class="chart-card">
@@ -244,19 +244,9 @@
       <canvas id="engagementScale"></canvas>
     </div>
     <div class="chart-card full-width">
-      <h3>AI Coach: Awareness vs Activation</h3>
-      <div class="chart-desc">Coach Home Module viewed vs actual coach conversations started</div>
+      <h3>All Engagement Features: Weekly Users Side by Side</h3>
+      <div class="chart-desc">Goals, reflections, journal, mood -- with AI Coach shown in gray for reference</div>
       <canvas id="coachGap"></canvas>
-    </div>
-    <div class="chart-card">
-      <h3>New Users vs App Opens</h3>
-      <div class="chart-desc">Weekly new users (first event ever) vs app openers -- how much of the base is new?</div>
-      <canvas id="newVsApp"></canvas>
-    </div>
-    <div class="chart-card">
-      <h3>Core Actions: Weekly Volume (Event Count)</h3>
-      <div class="chart-desc">Total events for session scheduling, telehealth, match flow, clinical questionnaires, direct booking</div>
-      <canvas id="coreVolume"></canvas>
     </div>
   </div>
 </div>
@@ -369,19 +359,19 @@
 <!-- INSIGHTS SECTION -->
 <div id="insights" class="section">
   <div class="insight-box" style="border-left-color: var(--sage);">
-    <h3 style="color: var(--sage);">The Big Picture: Where Goal Setting & Reflections Sit</h3>
+    <h3 style="color: var(--sage);">The Big Picture: Where Goal Setting & Reflections Sit in the App</h3>
     <ul>
-      <li><strong>SonderMind is a therapy platform first.</strong> ~31K users/week schedule sessions, ~30K start telehealth. The app exists to connect people with therapists and facilitate care.</li>
-      <li><strong>Goal setting reaches ~9.5% of weekly app openers (~2K of ~22K).</strong> This is moderate for a secondary/engagement feature -- not negligible, but not a primary driver.</li>
-      <li><span class="flag">Daily reflections reach only ~2.4% of app openers (~530/week).</span> This is a niche feature with a small but loyal base.</li>
-      <li>For comparison: Prep Module reaches ~96% of app openers, Session Scheduling ~140% (many schedule from web, not just app), and Coach Home Module ~120%. These are the features users actually see.</li>
-      <li><span class="win">AI Coach text conversations (~700/week, ~3.3%) already exceed reflections in raw users</span> despite being only 3 months old. But coach has even worse activation than goals -- 27K see the module, 700 actually converse.</li>
+      <li><strong>~22K users/week open the app</strong> (growing from ~19K in Sep to ~23K in Feb). This is the base for all penetration calculations.</li>
+      <li><strong>Goal setting reaches ~6.7% of current weekly app openers (~1.5K of ~23K).</strong> Period average was 9.5%, but it's declining. Still the most-used engagement feature by raw count.</li>
+      <li><span class="flag">Daily reflections reach only ~2.2% of app openers (~490/week).</span> This is a niche feature with a small but loyal base.</li>
+      <li>For comparison: Prep Module reaches ~96% of app openers, Module Viewed ~109%. Goals and reflections are low-penetration features relative to what users actually interact with in the app.</li>
+      <li>AI Coach text conversations (~800/week, 3.5%) now sit between goals and reflections in raw users as a reference point for scale.</li>
     </ul>
   </div>
   <div class="insight-box">
     <h3>Goal Setting: High Volume Relative to Engagement Features, but Zero Stickiness</h3>
     <ul>
-      <li>At ~2K users/week, goal creation is the <strong>most-used engagement feature</strong> by raw count -- larger than reflections, mood, journal, or coach conversations.</li>
+      <li>At ~1.5K users/week (current), goal creation is still the <strong>most-used engagement feature</strong> by raw count -- larger than reflections, mood, journal, or coach conversations. But the lead is shrinking.</li>
       <li><span class="flag">But retention is essentially 0% (0.9% D1-7).</span> Users create a goal and never come back to create another. It's a one-and-done interaction.</li>
       <li>The funnel from "Goals Module Viewed" (80K) to completion (658) converts at 0.8%. Awareness is massive. Follow-through is near zero.</li>
       <li>Volume dropped ~35% from Sep peak. Combined with zero retention, this suggests early novelty wearing off with no habit loop to sustain it.</li>
@@ -390,27 +380,10 @@
   <div class="insight-box">
     <h3>Daily Reflections: Tiny Base, Genuine Habit</h3>
     <ul>
-      <li>Only ~530 users/week save reflections -- <strong>2.4% of app openers and 1.7% of session schedulers.</strong> This is a very small audience.</li>
+      <li>Only ~490 users/week save reflections -- <strong>2.2% of app openers.</strong> This is a very small audience.</li>
       <li><span class="win">But those who do it, keep doing it: 39% return within a week, 22% still active at D60-90.</span> This is real habit formation.</li>
       <li>The question isn't "is reflection retention good?" (it is). The question is <strong>"does this tiny audience justify the feature's footprint?"</strong></li>
       <li>Biggest funnel leak: 59% of users who open the reflection screen never begin (41% convert to Begin). But the goal funnel is far worse -- 99.2% drop off at step 1.</li>
-    </ul>
-  </div>
-  <div class="insight-box">
-    <h3>AI Coach: The Elephant in the Room</h3>
-    <ul>
-      <li>Coach Home Module went from 0 to ~27K viewers/week in Dec 2025 -- it's now seen by more users than almost any other feature.</li>
-      <li><span class="flag">But only ~700 users/week actually start a text conversation (2.6% of module viewers), and ~120 do voice.</span> This is a massive awareness-to-activation gap.</li>
-      <li>Coach text convos (700/week) already exceed reflections (530/week) and mood (340/week) in weekly users -- and it's only 3 months old.</li>
-      <li>If the coach activation rate improved even modestly (to 5-10%), it would dwarf all other engagement features combined.</li>
-    </ul>
-  </div>
-  <div class="insight-box">
-    <h3>Direct Booking: The Breakout Story</h3>
-    <ul>
-      <li><span class="win">Direct Booking grew from 0 to ~25K events/week in 4 months (Oct 2025 - Jan 2026).</span> This is by far the fastest-growing feature.</li>
-      <li>It's now a significant part of the scheduling flow, running alongside the ~55K/week session scheduled events.</li>
-      <li>This is what product-market fit looks like in the data -- rapid, sustained adoption with no sign of plateau.</li>
     </ul>
   </div>
   <div class="insight-box">
@@ -443,7 +416,7 @@
         <li><strong>"9.5% penetration"</strong> uses the period average. Current week is <span class="flag">6.7%</span> (1,533 / 23K) -- a 44% decline from the Sep peak. The average masks the trajectory.</li>
         <li><strong>"70% reflection Open-to-Begin dropoff"</strong> is wrong. Actual dropoff is <strong>59%</strong> (41% convert to Begin). More importantly, the goal funnel has a <span class="flag">99.2% dropoff at step 1</span> (Module Viewed to Add Goal) -- 17x worse. The dashboard buried the bigger leak.</li>
         <li><strong>Goal funnel numbers are logically inconsistent.</strong> Goal Created (88) &lt; Goal Saved (658). You can't save a goal you didn't create. This points to instrumentation issues or incorrect funnel step ordering. Treat goal funnel data with caution.</li>
-        <li><strong>"Coach would dwarf all features at 5-10%"</strong> -- math is correct but speculative. Also: <span class="flag">we have zero coach retention data.</span> It could cliff like goals. Don't bet the farm on a projection.</li>
+        <li><strong>"Coach would dwarf all features at 5-10%"</strong> -- math is correct but speculative. No coach retention data exists yet. Noted for reference, not a driver of this analysis.</li>
       </ul>
     </div>
 
@@ -452,8 +425,7 @@
       <ul>
         <li><strong>Goal retention is essentially 0%.</strong> Confirmed. 0.9% D1-7 out of 53,819 users = fewer than 500 users ever return. This is zero in any practical product sense.</li>
         <li><strong>Reflection retention (39% D1-7, 22% D60-90) is genuinely strong.</strong> Confirmed. Unusual for an optional feature in healthcare. The curve shape (gentle degradation, not a cliff) suggests a real retained cohort.</li>
-        <li><strong>AI Coach already exceeds reflections in raw users.</strong> Confirmed. Coach text (~800/wk) > Reflection Save (~356/wk recent). Trajectories moving in opposite directions.</li>
-        <li><strong>Direct Booking is the breakout.</strong> Confirmed and understated. 0 to 25K events/wk in 4 months is in the same magnitude as core platform actions. Clearest product-market fit signal in the dataset.</li>
+        <li><strong>AI Coach already exceeds reflections in raw users.</strong> Confirmed. Coach text (~800/wk) > Reflection Save (~356/wk recent). Noted as a scale reference point.</li>
       </ul>
     </div>
   </div>
@@ -490,28 +462,20 @@
             <td style="padding: 8px; font-weight: 700; color: var(--amber);">MAINTAIN ONLY</td>
           </tr>
           <tr style="border-bottom: 1px solid #e0ddd8;">
-            <td style="padding: 8px; font-weight: 600;">AI Coach</td>
-            <td style="padding: 8px;">3.5% of app openers</td>
-            <td style="padding: 8px;"><span class="win">Growing (3mo old)</span></td>
+            <td style="padding: 8px; font-weight: 600;">Mood Tracking</td>
+            <td style="padding: 8px;">1.5% of app openers</td>
+            <td style="padding: 8px;">Stable</td>
             <td style="padding: 8px;">Unknown</td>
-            <td style="padding: 8px;">None (yet)</td>
-            <td style="padding: 8px; font-weight: 700; color: var(--green-good);">INVEST</td>
-          </tr>
-          <tr style="border-bottom: 1px solid #e0ddd8;">
-            <td style="padding: 8px; font-weight: 600;">Direct Booking</td>
-            <td style="padding: 8px;">~25K events/wk</td>
-            <td style="padding: 8px;"><span class="win">0 to 25K in 4mo</span></td>
-            <td style="padding: 8px;">N/A</td>
-            <td style="padding: 8px;">Direct (sessions)</td>
-            <td style="padding: 8px; font-weight: 700; color: var(--green-good);">INVEST</td>
+            <td style="padding: 8px;">None</td>
+            <td style="padding: 8px; font-weight: 700; color: var(--amber);">MAINTAIN ONLY</td>
           </tr>
           <tr>
-            <td style="padding: 8px; font-weight: 600;">Prep Module</td>
-            <td style="padding: 8px;">65-96% of openers</td>
-            <td style="padding: 8px;"><span class="win">Growing</span></td>
+            <td style="padding: 8px; font-weight: 600;">Journal</td>
+            <td style="padding: 8px;">2.0% of app openers</td>
+            <td style="padding: 8px;"><span class="flag">Declining</span></td>
             <td style="padding: 8px;">Unknown</td>
-            <td style="padding: 8px;">Indirect</td>
-            <td style="padding: 8px; font-weight: 700; color: var(--green-good);">INVEST</td>
+            <td style="padding: 8px;">None</td>
+            <td style="padding: 8px; font-weight: 700; color: var(--amber);">MAINTAIN ONLY</td>
           </tr>
         </tbody>
       </table>
@@ -524,7 +488,7 @@
       <li><strong>The December experiment already ran.</strong> A UI update drove more micro-interactions (Add Goal +5x, Goal Edit +4x) but failed to reverse the adoption decline or improve retention. The investment was tested and did not change the trajectory.</li>
       <li><strong>This is not a UX problem -- it's a user motivation problem.</strong> 80K users viewed the Goals module. 655 tapped Add Goal. Better design doesn't fix a 99.2% disinterest rate. Users see it, understand it, and choose not to engage.</li>
       <li><strong>At current trajectory, Goal Created drops below 1,000 weekly users by summer 2026.</strong> Investing dev time in a feature approaching single-digit-hundreds of users has steep opportunity cost.</li>
-      <li><strong>Opportunity cost is real.</strong> Every sprint on goal setting UI is a sprint not spent on Coach activation (800 users and growing) or Direct Booking (25K events/wk). The return on engineering time is higher elsewhere.</li>
+      <li><strong>Opportunity cost is real.</strong> Every sprint on goal setting UI is a sprint not spent on features with growing user demand. The return on engineering time is higher elsewhere.</li>
     </ul>
   </div>
 
@@ -534,7 +498,7 @@
       <li><strong>The retention is real.</strong> 39% D1-7, 22% D60-90 -- this is a genuine habit for those who adopt it. Shutting it down would alienate a loyal (if small) user base.</li>
       <li><strong>But the base is too small and declining to justify new feature work.</strong> ~530 weekly savers declining toward ~350. Even the retained cohort is only ~250-350 users at D60-90 from monthly cohorts.</li>
       <li><strong>If you want to test growth, try surfacing/prompting before rebuilding UI.</strong> A notification or in-app prompt experiment is a 1-2 sprint test, not a quarter of dev work. The bottleneck might be discovery, not quality.</li>
-      <li><strong>AI Coach may eventually subsume this use case.</strong> Conversational reflection through coach could be a more natural interface than structured forms. Monitor whether coach cannibalizes reflections naturally.</li>
+      <li><strong>Monitor for natural cannibalization.</strong> As other in-app features evolve, watch whether reflections decline further or stabilize. If another feature absorbs the use case, the decline is healthy platform evolution.</li>
     </ul>
   </div>
 
@@ -551,13 +515,12 @@
   <div class="insight-box" style="border-left-color: var(--dark);">
     <h3 style="color: var(--dark);">Missing Data: What We'd Need for Full Confidence</h3>
     <ul>
-      <li><strong>Session retention correlation.</strong> Do goal/reflection users attend more sessions? Lower churn? This is the #1 missing analysis and could reverse the recommendation.</li>
-      <li><strong>AI Coach retention curves.</strong> We're recommending investing in coach without knowing if it retains users. Could have the same cliff as goals.</li>
-      <li><strong>Therapist-side usage.</strong> Do providers reference client goals? Is there pull-through demand from the provider experience?</li>
-      <li><strong>Outcome measures.</strong> PHQ-9/GAD-7 score changes correlated with feature usage -- the ultimate test in a therapy platform.</li>
-      <li><strong>Cohort overlap.</strong> Are goal/reflection/coach/mood users the same people? If so, these features compete for a small wellness-curious segment rather than serving distinct needs.</li>
-      <li><strong>User tenure segmentation.</strong> Are these features used by new clients exploring, or established clients deepening engagement?</li>
-      <li><strong>The "Active Users" denominator.</strong> 200K-1M "active" users vs 22K app openers -- the real engaged client base (active therapy relationships) is likely closer to 22K. All penetration math depends on which number you use.</li>
+      <li><strong>Correlation with client retention.</strong> Do goal/reflection users stay longer or engage more broadly? This is the #1 missing analysis and could reverse the recommendation.</li>
+      <li><strong>Outcome measures.</strong> PHQ-9/GAD-7 score changes correlated with feature usage -- the ultimate test for whether these features matter clinically.</li>
+      <li><strong>Cohort overlap.</strong> Are goal/reflection/mood/journal users the same people? If so, these features compete for a small wellness-curious segment rather than serving distinct needs.</li>
+      <li><strong>User tenure segmentation.</strong> Are these features used by new clients exploring the app, or established clients deepening engagement? Different answers imply different strategies.</li>
+      <li><strong>Feature discovery rates.</strong> What % of app openers even know goals and reflections exist? Low adoption might be a discovery problem, not a value problem. Cheap to test with better surfacing before any UI investment.</li>
+      <li><strong>The "Active Users" denominator.</strong> 200K-1M "active" users vs 22K app openers -- the real engaged client base is likely closer to 22K. All penetration math depends on which number you use.</li>
     </ul>
   </div>
 
@@ -646,32 +609,31 @@ new Chart(document.getElementById('coreLoop'), {
   data: {
     labels: weeks,
     datasets: [
-      { label: 'Session Scheduled', data: sessionScheduledUsers, borderColor: C.sage, fill: false, borderWidth: 3 },
-      { label: 'Telehealth Started', data: telehealthStartUsers, borderColor: C.burgundy, fill: false, borderWidth: 3 },
-      { label: 'App Opened', data: appOpenedUsers, borderColor: C.amber, fill: false, borderWidth: 2 },
-      { label: 'Match Flow Completed', data: matchFlowCompletedUsers, borderColor: C.coral, fill: false, borderWidth: 2 },
-      { label: 'Chat Messages Sent', data: chatSentUsers, borderColor: C.blue, fill: false, borderWidth: 2, borderDash: [4,4] },
+      { label: 'App Opened', data: appOpenedUsers, borderColor: C.dark || C.sage, backgroundColor: C.sageA, fill: true, borderWidth: 3 },
+      { label: 'Module Viewed', data: moduleViewedUsers, borderColor: C.blue, fill: false, borderWidth: 2 },
+      { label: 'Prep Module Viewed', data: prepModuleUsers, borderColor: C.amber, fill: false, borderWidth: 2 },
+      { label: 'Goal Created', data: goalCreatedUsers, borderColor: C.sage, fill: false, borderWidth: 2.5 },
+      { label: 'Content Opened', data: contentOpenedUsers, borderColor: C.coral, fill: false, borderWidth: 1.5, borderDash: [4,4] },
+      { label: 'Reflection Saved', data: reflSaveUsers, borderColor: C.burgundy, fill: false, borderWidth: 2 },
+      { label: 'Coach Text Convo', data: coachTextUsers, borderColor: C.gray, fill: false, borderWidth: 1.5, borderDash: [2,2] },
     ]
   },
   options: mkOpts()
 });
 
-// Penetration bar -- recent 4-week avg
+// Penetration bar -- recent 4-week avg (in-app features only)
 const recent4 = (arr) => Math.round((arr[23]+arr[24]+arr[25]+arr[26])/4);
 const appBase = recent4(appOpenedUsers);
 const penData = [
-  { label: 'Prep Module', pct: +(recent4(prepModuleUsers)/appBase*100).toFixed(1) },
-  { label: 'Session Scheduled', pct: +(recent4(sessionScheduledUsers)/appBase*100).toFixed(1) },
-  { label: 'Coach Module Viewed', pct: +(recent4(coachHomeModuleUsers)/appBase*100).toFixed(1) },
-  { label: 'Module Viewed', pct: +(recent4(moduleViewedUsers)/appBase*100).toFixed(1) },
-  { label: 'Chat Sent', pct: +(recent4(chatSentUsers)/appBase*100).toFixed(1) },
-  { label: 'Goal Created', pct: +(recent4(goalCreatedUsers)/appBase*100).toFixed(1) },
-  { label: 'Content Opened', pct: +(recent4(contentOpenedUsers)/appBase*100).toFixed(1) },
-  { label: 'Coach Text Convo', pct: +(recent4(coachTextUsers)/appBase*100).toFixed(1) },
-  { label: 'Reflection Saved', pct: +(recent4(reflSaveUsers)/appBase*100).toFixed(1) },
-  { label: 'Mood Confirmed', pct: +(recent4(moodUsers)/appBase*100).toFixed(1) },
-  { label: 'Journal Started', pct: +(recent4(journalUsers)/appBase*100).toFixed(1) },
-  { label: 'Coach Voice Convo', pct: +(recent4(coachVoiceUsers)/appBase*100).toFixed(1) },
+  { label: 'Prep Module', pct: +(recent4(prepModuleUsers)/appBase*100).toFixed(1), cat: 'core' },
+  { label: 'Module Viewed', pct: +(recent4(moduleViewedUsers)/appBase*100).toFixed(1), cat: 'core' },
+  { label: 'Goal Created', pct: +(recent4(goalCreatedUsers)/appBase*100).toFixed(1), cat: 'engage' },
+  { label: 'Content Opened', pct: +(recent4(contentOpenedUsers)/appBase*100).toFixed(1), cat: 'core' },
+  { label: 'Coach Text Convo', pct: +(recent4(coachTextUsers)/appBase*100).toFixed(1), cat: 'ref' },
+  { label: 'Reflection Saved', pct: +(recent4(reflSaveUsers)/appBase*100).toFixed(1), cat: 'engage' },
+  { label: 'Journal Started', pct: +(recent4(journalUsers)/appBase*100).toFixed(1), cat: 'engage' },
+  { label: 'Mood Confirmed', pct: +(recent4(moodUsers)/appBase*100).toFixed(1), cat: 'engage' },
+  { label: 'Coach Voice Convo', pct: +(recent4(coachVoiceUsers)/appBase*100).toFixed(1), cat: 'ref' },
 ].sort((a,b) => b.pct - a.pct);
 
 new Chart(document.getElementById('penetrationBar'), {
@@ -682,8 +644,8 @@ new Chart(document.getElementById('penetrationBar'), {
       label: '% of App Openers (last 4 weeks)',
       data: penData.map(d => d.pct),
       backgroundColor: penData.map(d => {
-        if (d.label.includes('Goal') || d.label.includes('Reflection') || d.label.includes('Mood') || d.label.includes('Journal')) return 'rgba(107,58,77,0.7)';
-        if (d.label.includes('Coach')) return 'rgba(212,168,83,0.7)';
+        if (d.cat === 'engage') return 'rgba(107,58,77,0.7)';
+        if (d.cat === 'ref') return 'rgba(122,114,103,0.5)';
         return 'rgba(74,124,111,0.5)';
       }),
       borderWidth: 0,
@@ -692,7 +654,9 @@ new Chart(document.getElementById('penetrationBar'), {
   options: {
     ...mkOpts(),
     indexAxis: 'y',
-    plugins: { ...defaultOpts.plugins, legend: { display: false } },
+    plugins: { ...defaultOpts.plugins, legend: { display: false },
+      subtitle: { display: true, text: 'Burgundy = engagement features under review | Green = core app | Gray = AI Coach (for reference)', font: { size: 11 }, color: '#7A7267', padding: { bottom: 12 } }
+    },
     scales: { x: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { callback: v => v + '%' } }, y: { grid: { display: false }, ticks: { font: { size: 11 } } } }
   }
 });
@@ -703,11 +667,10 @@ new Chart(document.getElementById('engagementScale'), {
     labels: weeks,
     datasets: [
       { label: 'Goal Created', data: goalCreatedUsers, borderColor: C.sage, fill: false, borderWidth: 2.5 },
-      { label: 'Coach Text Convo', data: coachTextUsers, borderColor: C.amber, fill: false, borderWidth: 2.5 },
       { label: 'Reflection Saved', data: reflSaveUsers, borderColor: C.burgundy, fill: false, borderWidth: 2.5 },
       { label: 'Journal Started', data: journalUsers, borderColor: C.coral, fill: false, borderWidth: 2 },
-      { label: 'Mood Confirmed', data: moodUsers, borderColor: C.blue, fill: false, borderWidth: 2, borderDash: [4,4] },
-      { label: 'Coach Voice', data: coachVoiceUsers, borderColor: C.gray, fill: false, borderWidth: 1.5, borderDash: [2,2] },
+      { label: 'Mood Confirmed', data: moodUsers, borderColor: C.blue, fill: false, borderWidth: 2 },
+      { label: 'Coach Text (ref)', data: coachTextUsers, borderColor: C.gray, fill: false, borderWidth: 1.5, borderDash: [4,4] },
     ]
   },
   options: mkOpts()
@@ -718,35 +681,20 @@ new Chart(document.getElementById('coachGap'), {
   data: {
     labels: weeks,
     datasets: [
-      { label: 'Coach Home Module Viewed', data: coachHomeModuleUsers, borderColor: C.amber, backgroundColor: C.amberA, fill: true, borderWidth: 3 },
-      { label: 'Coach Text Convo', data: coachTextUsers, borderColor: C.sage, fill: false, borderWidth: 2.5 },
-      { label: 'Coach Voice Convo', data: coachVoiceUsers, borderColor: C.burgundy, fill: false, borderWidth: 2 },
-      { label: 'Goal Created (for scale)', data: goalCreatedUsers, borderColor: C.gray, fill: false, borderWidth: 1.5, borderDash: [4,4] },
+      { label: 'Goal Created', data: goalCreatedUsers, borderColor: C.sage, backgroundColor: C.sageA, fill: true, borderWidth: 2.5 },
+      { label: 'Reflection Open', data: reflOpenUsers, borderColor: C.burgundy, fill: false, borderWidth: 2 },
+      { label: 'Reflection Saved', data: reflSaveUsers, borderColor: C.burgundy, fill: false, borderWidth: 2, borderDash: [4,4] },
+      { label: 'Journal Started', data: journalUsers, borderColor: C.coral, fill: false, borderWidth: 2 },
+      { label: 'Mood Confirmed', data: moodUsers, borderColor: C.blue, fill: false, borderWidth: 2 },
+      { label: 'Coach Text (ref)', data: coachTextUsers, borderColor: C.gray, fill: false, borderWidth: 1.5, borderDash: [2,2] },
     ]
   },
   options: mkOpts()
 });
 
-new Chart(document.getElementById('newVsApp'), {
-  type: 'line',
-  data: {
-    labels: weeks,
-    datasets: [
-      { label: 'App Opened', data: appOpenedUsers, borderColor: C.sage, backgroundColor: C.sageA, fill: true, borderWidth: 2.5 },
-      { label: 'Match Flow Started', data: [24099,22544,20871,19429,25421,23371,22040,19082,16491,18739,19078,17060,7995,19268,19658,16792,10180,19075,19431,23748,19296,16713,20516,19338,23985,20147,13196], borderColor: C.amber, fill: false, borderWidth: 2 },
-      { label: 'Account Completed', data: [3078,3202,3190,2939,3386,3333,3241,3183,3136,3416,3020,2625,1554,2513,2566,2109,1235,2158,3267,3279,3021,2899,3108,2843,2791,2860,2180], borderColor: C.coral, fill: false, borderWidth: 2 },
-    ]
-  },
-  options: mkOpts()
-});
+/* removed newVsApp and coreVolume charts -- not in-app focused */
+// placeholder to avoid JS errors for removed canvases
 
-new Chart(document.getElementById('coreVolume'), {
-  type: 'line',
-  data: {
-    labels: weeks,
-    datasets: [
-      { label: 'Telehealth Start', data: telehealthTotals, borderColor: C.burgundy, fill: false, borderWidth: 2.5 },
-      { label: 'Session Scheduled', data: sessionSchedTotals, borderColor: C.sage, fill: false, borderWidth: 2.5 },
       { label: 'Clinical Q Completed', data: clinicalQTotals, borderColor: C.blue, fill: false, borderWidth: 2 },
       { label: 'Direct Booking', data: directBookingTotals, borderColor: C.amber, fill: false, borderWidth: 2.5 },
       { label: 'Match Flow Completed', data: matchFlowTotals, borderColor: C.coral, fill: false, borderWidth: 2, borderDash: [4,4] },
