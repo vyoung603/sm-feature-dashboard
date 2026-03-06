@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SonderMind App Feature Utilization Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --sage: #4A7C6F;
+    --sage-light: #6B9E8F;
+    --burgundy: #6B3A4D;
+    --burgundy-light: #8E5A6D;
+    --cream: #F5F2ED;
+    --warm-gray: #7A7267;
+    --dark: #2C2826;
+    --amber: #D4A853;
+    --coral: #C17B6E;
+    --blue: #5B8BA0;
+    --red-flag: #C0392B;
+    --green-good: #27AE60;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--cream);
+    color: var(--dark);
+    padding: 24px;
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--sage);
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    font-size: 14px;
+    color: var(--warm-gray);
+    margin-bottom: 24px;
+  }
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .kpi-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    border-left: 4px solid var(--sage);
+  }
+  .kpi-card.warn { border-left-color: var(--coral); }
+  .kpi-card.danger { border-left-color: var(--red-flag); }
+  .kpi-card.good { border-left-color: var(--green-good); }
+  .kpi-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--warm-gray);
+    margin-bottom: 6px;
+  }
+  .kpi-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1.1;
+  }
+  .kpi-delta {
+    font-size: 13px;
+    margin-top: 4px;
+  }
+  .kpi-delta.up { color: var(--green-good); }
+  .kpi-delta.down { color: var(--red-flag); }
+  .kpi-note {
+    font-size: 11px;
+    color: var(--warm-gray);
+    margin-top: 4px;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .tab {
+    padding: 8px 20px;
+    border-radius: 20px;
+    border: 1.5px solid var(--sage);
+    background: transparent;
+    color: var(--sage);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab:hover { background: var(--sage); color: white; }
+  .tab.active { background: var(--sage); color: white; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .chart-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  .chart-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .chart-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 4px;
+  }
+  .chart-card .chart-desc {
+    font-size: 12px;
+    color: var(--warm-gray);
+    margin-bottom: 16px;
+  }
+  .chart-card canvas {
+    width: 100% !important;
+    max-height: 320px;
+  }
+
+  .insight-box {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    margin-bottom: 24px;
+    border-left: 4px solid var(--burgundy);
+  }
+  .insight-box h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--burgundy);
+    margin-bottom: 10px;
+  }
+  .insight-box ul { padding-left: 20px; }
+  .insight-box li {
+    font-size: 14px;
+    color: var(--dark);
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+  .flag { color: var(--red-flag); font-weight: 600; }
+  .win { color: var(--green-good); font-weight: 600; }
+
+  .full-width { grid-column: 1 / -1; }
+
+  @media (max-width: 768px) {
+    .chart-grid { grid-template-columns: 1fr; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<h1>SonderMind App Feature Utilization</h1>
+<p class="subtitle">SonderMind App | Amplitude (Project 585474) | Last 6 Months (Sep 2025 - Mar 2026) | Generated Mar 5, 2026</p>
+
+<div class="kpi-row">
+  <div class="kpi-card good">
+    <div class="kpi-label">Weekly App Opens</div>
+    <div class="kpi-value">~22K</div>
+    <div class="kpi-delta up">Steady, growing since Sep</div>
+    <div class="kpi-note">Unique users opening the app per week</div>
+  </div>
+  <div class="kpi-card good">
+    <div class="kpi-label">Weekly Session Schedulers</div>
+    <div class="kpi-value">~31K</div>
+    <div class="kpi-note">Core therapy loop -- the reason people are here</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Goal Creators / App Openers</div>
+    <div class="kpi-value">9.5%</div>
+    <div class="kpi-delta down">~2K of ~22K weekly app users</div>
+    <div class="kpi-note">Moderate adoption for a secondary feature</div>
+  </div>
+  <div class="kpi-card warn">
+    <div class="kpi-label">Reflection Savers / App Openers</div>
+    <div class="kpi-value">2.4%</div>
+    <div class="kpi-delta down">~530 of ~22K weekly app users</div>
+    <div class="kpi-note">Very small engaged audience</div>
+  </div>
+  <div class="kpi-card danger">
+    <div class="kpi-label">Goal Retention (D7-14)</div>
+    <div class="kpi-value">0.6%</div>
+    <div class="kpi-delta down">Near-zero repeat goal creation</div>
+    <div class="kpi-note">% who create another goal 7-14 days later</div>
+  </div>
+  <div class="kpi-card good">
+    <div class="kpi-label">Reflection Retention (D7-14)</div>
+    <div class="kpi-value">32.0%</div>
+    <div class="kpi-delta up">Healthy habit among the small base</div>
+    <div class="kpi-note">% who save another reflection 7-14 days later</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showSection('appcontext')">App Context</button>
+  <button class="tab" onclick="showSection('overview')">Feature Overview</button>
+  <button class="tab" onclick="showSection('goals')">Goal Setting</button>
+  <button class="tab" onclick="showSection('reflections')">Daily Reflections</button>
+  <button class="tab" onclick="showSection('retention')">Retention</button>
+  <button class="tab" onclick="showSection('mood')">Mood & Journal</button>
+  <button class="tab" onclick="showSection('insights')">Key Insights</button>
+  <button class="tab" onclick="showSection('analysis')" style="border-color: var(--burgundy); color: var(--burgundy);">Fact-Check & Recommendation</button>
+</div>
+
+<!-- APP CONTEXT SECTION -->
+<div id="appcontext" class="section active">
+  <div class="insight-box" style="border-left-color: var(--sage);">
+    <h3 style="color: var(--sage);">What Are SonderMind App Users Actually Doing?</h3>
+    <ul>
+      <li><strong>The core loop is therapy sessions.</strong> ~31K users/week schedule sessions, ~30K start telehealth. This is the primary value prop -- everything else is secondary.</li>
+      <li><strong>~22K users/week open the app.</strong> Of those, ~5-6K complete match flows (finding a therapist) and ~5.5K send chat messages to providers.</li>
+      <li><strong>AI Coach launched mid-Dec 2025.</strong> Coach Home Module went from near-zero to ~27K viewers/week, but actual coach conversations are only ~700-800/week (text) and ~100-130/week (voice). Massive awareness, very low activation.</li>
+      <li><strong>Direct Booking is the breakout feature.</strong> Launched Oct 2025, grew from 0 to ~25K events/week by Jan 2026 -- fastest-growing feature in the app.</li>
+    </ul>
+  </div>
+  <div class="chart-grid">
+    <div class="chart-card full-width">
+      <h3>The Core Therapy Loop: Weekly Users</h3>
+      <div class="chart-desc">Session scheduling, telehealth starts, match flow, and app opens -- the primary use cases</div>
+      <canvas id="coreLoop"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Feature Penetration: % of App Openers</h3>
+      <div class="chart-desc">What share of weekly app openers engage with each feature?</div>
+      <canvas id="penetrationBar"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Engagement Features: Absolute Scale</h3>
+      <div class="chart-desc">Goals, reflections, mood, journal, coach convos -- all on same axis for honest comparison</div>
+      <canvas id="engagementScale"></canvas>
+    </div>
+    <div class="chart-card full-width">
+      <h3>AI Coach: Awareness vs Activation</h3>
+      <div class="chart-desc">Coach Home Module viewed vs actual coach conversations started</div>
+      <canvas id="coachGap"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>New Users vs App Opens</h3>
+      <div class="chart-desc">Weekly new users (first event ever) vs app openers -- how much of the base is new?</div>
+      <canvas id="newVsApp"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Core Actions: Weekly Volume (Event Count)</h3>
+      <div class="chart-desc">Total events for session scheduling, telehealth, match flow, clinical questionnaires, direct booking</div>
+      <canvas id="coreVolume"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- OVERVIEW SECTION -->
+<div id="overview" class="section">
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h3>Feature Adoption: Unique Users per Week</h3>
+      <div class="chart-desc">Goal creators vs reflection savers vs mood/journal users</div>
+      <canvas id="overviewUsers"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Feature as % of App Openers</h3>
+      <div class="chart-desc">Penetration rate among weekly app openers (Application Opened event)</div>
+      <canvas id="overviewPenetration"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- GOALS SECTION -->
+<div id="goals" class="section">
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h3>Goal Events: Weekly Volume</h3>
+      <div class="chart-desc">Total event counts by type</div>
+      <canvas id="goalEvents"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Goal Unique Users: Weekly</h3>
+      <div class="chart-desc">Users engaging with goal features</div>
+      <canvas id="goalUsers"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Goal Creation Frequency Distribution</h3>
+      <div class="chart-desc">How many goals do users create per month?</div>
+      <canvas id="goalFreq"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Goal Funnel: View -> Add -> Create -> Save</h3>
+      <div class="chart-desc">Overall 6-month conversion (7-day window)</div>
+      <canvas id="goalFunnel"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- REFLECTIONS SECTION -->
+<div id="reflections" class="section">
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h3>Reflection Events: Weekly Volume</h3>
+      <div class="chart-desc">Open, Begin, Save, Close events</div>
+      <canvas id="reflEvents"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Reflection Unique Users: Weekly</h3>
+      <div class="chart-desc">Users at each funnel stage</div>
+      <canvas id="reflUsers"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Reflection Funnel: Open -> Begin -> Save</h3>
+      <div class="chart-desc">Same-day conversion rate</div>
+      <canvas id="reflFunnel"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Reflection Completion Rate Over Time</h3>
+      <div class="chart-desc">Weekly % of opens that result in a saved reflection</div>
+      <canvas id="reflCompRate"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- RETENTION SECTION -->
+<div id="retention" class="section">
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h3>Goal Setting: Bracket Retention</h3>
+      <div class="chart-desc">% of users who create another goal in each time window (N=53,819)</div>
+      <canvas id="goalRetention"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Daily Reflections: Bracket Retention</h3>
+      <div class="chart-desc">% of users who save another reflection in each time window (N=22,239)</div>
+      <canvas id="reflRetention"></canvas>
+    </div>
+    <div class="chart-card full-width">
+      <h3>Retention Comparison: Goals vs Reflections</h3>
+      <div class="chart-desc">Side-by-side retention curves -- the gap tells the story</div>
+      <canvas id="retentionCompare"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- MOOD & JOURNAL SECTION -->
+<div id="mood" class="section">
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h3>Mood & Journal: Weekly Unique Users</h3>
+      <div class="chart-desc">Users confirming mood, adjusting slider, or starting journal entries</div>
+      <canvas id="moodUsers"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Feature Comparison: Weekly Users</h3>
+      <div class="chart-desc">All features side by side for relative scale</div>
+      <canvas id="featureCompare"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- INSIGHTS SECTION -->
+<div id="insights" class="section">
+  <div class="insight-box" style="border-left-color: var(--sage);">
+    <h3 style="color: var(--sage);">The Big Picture: Where Goal Setting & Reflections Sit</h3>
+    <ul>
+      <li><strong>SonderMind is a therapy platform first.</strong> ~31K users/week schedule sessions, ~30K start telehealth. The app exists to connect people with therapists and facilitate care.</li>
+      <li><strong>Goal setting reaches ~9.5% of weekly app openers (~2K of ~22K).</strong> This is moderate for a secondary/engagement feature -- not negligible, but not a primary driver.</li>
+      <li><span class="flag">Daily reflections reach only ~2.4% of app openers (~530/week).</span> This is a niche feature with a small but loyal base.</li>
+      <li>For comparison: Prep Module reaches ~96% of app openers, Session Scheduling ~140% (many schedule from web, not just app), and Coach Home Module ~120%. These are the features users actually see.</li>
+      <li><span class="win">AI Coach text conversations (~700/week, ~3.3%) already exceed reflections in raw users</span> despite being only 3 months old. But coach has even worse activation than goals -- 27K see the module, 700 actually converse.</li>
+    </ul>
+  </div>
+  <div class="insight-box">
+    <h3>Goal Setting: High Volume Relative to Engagement Features, but Zero Stickiness</h3>
+    <ul>
+      <li>At ~2K users/week, goal creation is the <strong>most-used engagement feature</strong> by raw count -- larger than reflections, mood, journal, or coach conversations.</li>
+      <li><span class="flag">But retention is essentially 0% (0.9% D1-7).</span> Users create a goal and never come back to create another. It's a one-and-done interaction.</li>
+      <li>The funnel from "Goals Module Viewed" (80K) to completion (658) converts at 0.8%. Awareness is massive. Follow-through is near zero.</li>
+      <li>Volume dropped ~35% from Sep peak. Combined with zero retention, this suggests early novelty wearing off with no habit loop to sustain it.</li>
+    </ul>
+  </div>
+  <div class="insight-box">
+    <h3>Daily Reflections: Tiny Base, Genuine Habit</h3>
+    <ul>
+      <li>Only ~530 users/week save reflections -- <strong>2.4% of app openers and 1.7% of session schedulers.</strong> This is a very small audience.</li>
+      <li><span class="win">But those who do it, keep doing it: 39% return within a week, 22% still active at D60-90.</span> This is real habit formation.</li>
+      <li>The question isn't "is reflection retention good?" (it is). The question is <strong>"does this tiny audience justify the feature's footprint?"</strong></li>
+      <li>Biggest funnel leak: 59% of users who open the reflection screen never begin (41% convert to Begin). But the goal funnel is far worse -- 99.2% drop off at step 1.</li>
+    </ul>
+  </div>
+  <div class="insight-box">
+    <h3>AI Coach: The Elephant in the Room</h3>
+    <ul>
+      <li>Coach Home Module went from 0 to ~27K viewers/week in Dec 2025 -- it's now seen by more users than almost any other feature.</li>
+      <li><span class="flag">But only ~700 users/week actually start a text conversation (2.6% of module viewers), and ~120 do voice.</span> This is a massive awareness-to-activation gap.</li>
+      <li>Coach text convos (700/week) already exceed reflections (530/week) and mood (340/week) in weekly users -- and it's only 3 months old.</li>
+      <li>If the coach activation rate improved even modestly (to 5-10%), it would dwarf all other engagement features combined.</li>
+    </ul>
+  </div>
+  <div class="insight-box">
+    <h3>Direct Booking: The Breakout Story</h3>
+    <ul>
+      <li><span class="win">Direct Booking grew from 0 to ~25K events/week in 4 months (Oct 2025 - Jan 2026).</span> This is by far the fastest-growing feature.</li>
+      <li>It's now a significant part of the scheduling flow, running alongside the ~55K/week session scheduled events.</li>
+      <li>This is what product-market fit looks like in the data -- rapid, sustained adoption with no sign of plateau.</li>
+    </ul>
+  </div>
+  <div class="insight-box">
+    <h3>Questions to Investigate</h3>
+    <ul>
+      <li><strong>Is goal creation designed to be one-time?</strong> If so, 0% retention is fine -- track edits/engagement instead. If users should set multiple goals, the product needs a re-engagement loop.</li>
+      <li><strong>Something changed in mid-December</strong> with goal tracking (Goal Saved appeared, Add Goal jumped 5x). New feature or new instrumentation?</li>
+      <li><strong>What's blocking the reflection "Open to Begin" conversion?</strong> 59% drop off before starting. Is the prompt wrong? Is the UI friction too high?</li>
+      <li><strong>Why is AI Coach activation so low?</strong> 27K see it, 700 engage. Is it the positioning, the CTA, the first message, or user intent mismatch?</li>
+      <li><strong>Are goal/reflection/coach users the same people?</strong> A cohort overlap analysis would reveal if these are complementary features or competing for the same small wellness-curious audience.</li>
+      <li><strong>Platform property is "(none)" for all events.</strong> Can't segment iOS vs Android vs Web. This is a tracking gap that should be fixed.</li>
+      <li><strong>"Active Users" numbers (~200K-1M/week) vs "App Opened" (~22K/week).</strong> The active user count likely includes web/marketing traffic. Clarify what "active" means in this project -- it inflates all penetration metrics if used as the denominator.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- FACT-CHECK & RECOMMENDATION SECTION -->
+<div id="analysis" class="section">
+
+  <div class="insight-box" style="border-left-color: var(--dark); background: #faf8f5;">
+    <h3 style="color: var(--dark);">Independent Data Science Review</h3>
+    <p style="font-size: 13px; color: var(--warm-gray); margin-bottom: 12px;">Automated fact-check of dashboard claims and resource allocation analysis. Generated by a separate analytical agent reviewing the raw Amplitude data.</p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(520px, 1fr)); gap: 24px; margin-bottom: 24px;">
+
+    <div class="insight-box" style="border-left-color: var(--red-flag);">
+      <h3 style="color: var(--red-flag);">Claims Flagged as Incorrect or Misleading</h3>
+      <ul>
+        <li><strong>"9.5% penetration"</strong> uses the period average. Current week is <span class="flag">6.7%</span> (1,533 / 23K) -- a 44% decline from the Sep peak. The average masks the trajectory.</li>
+        <li><strong>"70% reflection Open-to-Begin dropoff"</strong> is wrong. Actual dropoff is <strong>59%</strong> (41% convert to Begin). More importantly, the goal funnel has a <span class="flag">99.2% dropoff at step 1</span> (Module Viewed to Add Goal) -- 17x worse. The dashboard buried the bigger leak.</li>
+        <li><strong>Goal funnel numbers are logically inconsistent.</strong> Goal Created (88) &lt; Goal Saved (658). You can't save a goal you didn't create. This points to instrumentation issues or incorrect funnel step ordering. Treat goal funnel data with caution.</li>
+        <li><strong>"Coach would dwarf all features at 5-10%"</strong> -- math is correct but speculative. Also: <span class="flag">we have zero coach retention data.</span> It could cliff like goals. Don't bet the farm on a projection.</li>
+      </ul>
+    </div>
+
+    <div class="insight-box" style="border-left-color: var(--green-good);">
+      <h3 style="color: var(--green-good);">Claims Confirmed as Accurate</h3>
+      <ul>
+        <li><strong>Goal retention is essentially 0%.</strong> Confirmed. 0.9% D1-7 out of 53,819 users = fewer than 500 users ever return. This is zero in any practical product sense.</li>
+        <li><strong>Reflection retention (39% D1-7, 22% D60-90) is genuinely strong.</strong> Confirmed. Unusual for an optional feature in healthcare. The curve shape (gentle degradation, not a cliff) suggests a real retained cohort.</li>
+        <li><strong>AI Coach already exceeds reflections in raw users.</strong> Confirmed. Coach text (~800/wk) > Reflection Save (~356/wk recent). Trajectories moving in opposite directions.</li>
+        <li><strong>Direct Booking is the breakout.</strong> Confirmed and understated. 0 to 25K events/wk in 4 months is in the same magnitude as core platform actions. Clearest product-market fit signal in the dataset.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="insight-box" style="border-left-color: var(--burgundy);">
+    <h3 style="color: var(--burgundy);">Resource Allocation Recommendation</h3>
+    <div style="overflow-x: auto; margin: 16px 0;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+        <thead>
+          <tr style="border-bottom: 2px solid var(--dark); text-align: left;">
+            <th style="padding: 8px;">Feature</th>
+            <th style="padding: 8px;">Current Reach</th>
+            <th style="padding: 8px;">6-Month Trend</th>
+            <th style="padding: 8px;">Retention</th>
+            <th style="padding: 8px;">Revenue</th>
+            <th style="padding: 8px;">Verdict</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid #e0ddd8;">
+            <td style="padding: 8px; font-weight: 600;">Goal Setting</td>
+            <td style="padding: 8px;">6.7% of app openers</td>
+            <td style="padding: 8px;"><span class="flag">-44%</span></td>
+            <td style="padding: 8px;"><span class="flag">0.9% D1-7</span></td>
+            <td style="padding: 8px;">None</td>
+            <td style="padding: 8px; font-weight: 700; color: var(--red-flag);">FREEZE</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #e0ddd8;">
+            <td style="padding: 8px; font-weight: 600;">Daily Reflections</td>
+            <td style="padding: 8px;">~5% of app openers</td>
+            <td style="padding: 8px;"><span class="flag">-49%</span></td>
+            <td style="padding: 8px;"><span class="win">39% D1-7</span></td>
+            <td style="padding: 8px;">None</td>
+            <td style="padding: 8px; font-weight: 700; color: var(--amber);">MAINTAIN ONLY</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #e0ddd8;">
+            <td style="padding: 8px; font-weight: 600;">AI Coach</td>
+            <td style="padding: 8px;">3.5% of app openers</td>
+            <td style="padding: 8px;"><span class="win">Growing (3mo old)</span></td>
+            <td style="padding: 8px;">Unknown</td>
+            <td style="padding: 8px;">None (yet)</td>
+            <td style="padding: 8px; font-weight: 700; color: var(--green-good);">INVEST</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #e0ddd8;">
+            <td style="padding: 8px; font-weight: 600;">Direct Booking</td>
+            <td style="padding: 8px;">~25K events/wk</td>
+            <td style="padding: 8px;"><span class="win">0 to 25K in 4mo</span></td>
+            <td style="padding: 8px;">N/A</td>
+            <td style="padding: 8px;">Direct (sessions)</td>
+            <td style="padding: 8px; font-weight: 700; color: var(--green-good);">INVEST</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; font-weight: 600;">Prep Module</td>
+            <td style="padding: 8px;">65-96% of openers</td>
+            <td style="padding: 8px;"><span class="win">Growing</span></td>
+            <td style="padding: 8px;">Unknown</td>
+            <td style="padding: 8px;">Indirect</td>
+            <td style="padding: 8px; font-weight: 700; color: var(--green-good);">INVEST</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="insight-box" style="border-left-color: var(--sage);">
+    <h3 style="color: var(--sage);">The Case for Freezing Goal Setting</h3>
+    <ul>
+      <li><strong>The December experiment already ran.</strong> A UI update drove more micro-interactions (Add Goal +5x, Goal Edit +4x) but failed to reverse the adoption decline or improve retention. The investment was tested and did not change the trajectory.</li>
+      <li><strong>This is not a UX problem -- it's a user motivation problem.</strong> 80K users viewed the Goals module. 655 tapped Add Goal. Better design doesn't fix a 99.2% disinterest rate. Users see it, understand it, and choose not to engage.</li>
+      <li><strong>At current trajectory, Goal Created drops below 1,000 weekly users by summer 2026.</strong> Investing dev time in a feature approaching single-digit-hundreds of users has steep opportunity cost.</li>
+      <li><strong>Opportunity cost is real.</strong> Every sprint on goal setting UI is a sprint not spent on Coach activation (800 users and growing) or Direct Booking (25K events/wk). The return on engineering time is higher elsewhere.</li>
+    </ul>
+  </div>
+
+  <div class="insight-box" style="border-left-color: var(--amber);">
+    <h3 style="color: var(--amber);">The Case for Maintaining (Not Investing In) Reflections</h3>
+    <ul>
+      <li><strong>The retention is real.</strong> 39% D1-7, 22% D60-90 -- this is a genuine habit for those who adopt it. Shutting it down would alienate a loyal (if small) user base.</li>
+      <li><strong>But the base is too small and declining to justify new feature work.</strong> ~530 weekly savers declining toward ~350. Even the retained cohort is only ~250-350 users at D60-90 from monthly cohorts.</li>
+      <li><strong>If you want to test growth, try surfacing/prompting before rebuilding UI.</strong> A notification or in-app prompt experiment is a 1-2 sprint test, not a quarter of dev work. The bottleneck might be discovery, not quality.</li>
+      <li><strong>AI Coach may eventually subsume this use case.</strong> Conversational reflection through coach could be a more natural interface than structured forms. Monitor whether coach cannibalizes reflections naturally.</li>
+    </ul>
+  </div>
+
+  <div class="insight-box" style="border-left-color: var(--red-flag);">
+    <h3 style="color: var(--red-flag);">Critical Caveat: The One Thing That Could Reverse This</h3>
+    <ul>
+      <li><span class="flag">We do not have data on whether goal setting or reflections correlate with session retention or therapy outcomes.</span></li>
+      <li>If users who set goals attend 20% more sessions, or reflection users have lower churn, the in-app retention numbers are irrelevant -- the feature works through the therapy relationship, not through the app.</li>
+      <li><strong>This analysis must be run before making a final decision.</strong> It requires joining Amplitude behavioral data with session/billing data. Without it, we are optimizing for app engagement metrics when the real value may be clinical.</li>
+      <li>Similarly, if therapists are actively referencing client goals in sessions, the client-side retention metric is misleading -- the feature is being consumed via the provider, not the app.</li>
+    </ul>
+  </div>
+
+  <div class="insight-box" style="border-left-color: var(--dark);">
+    <h3 style="color: var(--dark);">Missing Data: What We'd Need for Full Confidence</h3>
+    <ul>
+      <li><strong>Session retention correlation.</strong> Do goal/reflection users attend more sessions? Lower churn? This is the #1 missing analysis and could reverse the recommendation.</li>
+      <li><strong>AI Coach retention curves.</strong> We're recommending investing in coach without knowing if it retains users. Could have the same cliff as goals.</li>
+      <li><strong>Therapist-side usage.</strong> Do providers reference client goals? Is there pull-through demand from the provider experience?</li>
+      <li><strong>Outcome measures.</strong> PHQ-9/GAD-7 score changes correlated with feature usage -- the ultimate test in a therapy platform.</li>
+      <li><strong>Cohort overlap.</strong> Are goal/reflection/coach/mood users the same people? If so, these features compete for a small wellness-curious segment rather than serving distinct needs.</li>
+      <li><strong>User tenure segmentation.</strong> Are these features used by new clients exploring, or established clients deepening engagement?</li>
+      <li><strong>The "Active Users" denominator.</strong> 200K-1M "active" users vs 22K app openers -- the real engaged client base (active therapy relationships) is likely closer to 22K. All penetration math depends on which number you use.</li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+const weeks = ["Sep 1","Sep 8","Sep 15","Sep 22","Sep 29","Oct 6","Oct 13","Oct 20","Oct 27","Nov 3","Nov 10","Nov 17","Nov 24","Dec 1","Dec 8","Dec 15","Dec 22","Dec 29","Jan 5","Jan 12","Jan 19","Jan 26","Feb 2","Feb 9","Feb 16","Feb 23","Mar 2"];
+
+// Color palette
+const C = {
+  sage: 'rgba(74,124,111,1)', sageA: 'rgba(74,124,111,0.15)',
+  burgundy: 'rgba(107,58,77,1)', burgundyA: 'rgba(107,58,77,0.15)',
+  amber: 'rgba(212,168,83,1)', amberA: 'rgba(212,168,83,0.15)',
+  coral: 'rgba(193,123,110,1)', coralA: 'rgba(193,123,110,0.15)',
+  blue: 'rgba(91,139,160,1)', blueA: 'rgba(91,139,160,0.15)',
+  gray: 'rgba(122,114,103,1)', grayA: 'rgba(122,114,103,0.15)',
+};
+
+const defaultOpts = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: { position: 'bottom', labels: { usePointStyle: true, padding: 16, font: { size: 12 } } },
+    tooltip: { mode: 'index', intersect: false }
+  },
+  scales: {
+    x: { grid: { display: false }, ticks: { maxRotation: 45, font: { size: 10 } } },
+    y: { grid: { color: 'rgba(0,0,0,0.05)' }, beginAtZero: true }
+  },
+  interaction: { mode: 'nearest', axis: 'x', intersect: false },
+  elements: { point: { radius: 2, hoverRadius: 5 }, line: { tension: 0.3, borderWidth: 2 } }
+};
+
+function mkOpts(overrides = {}) {
+  return JSON.parse(JSON.stringify({...defaultOpts, ...overrides}));
+}
+
+// DATA
+const goalCreatedTotals = [5895,6129,4874,4823,4477,4762,4482,4700,4354,4410,4410,4615,3102,3842,3653,3810,2211,2595,3662,3693,3452,3597,3643,3788,3313,3438,2464];
+const goalSavedTotals = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,421,616,287,439,608,424,427,302,331,257,239,228,270];
+const addGoalTotals = [45,28,48,41,33,47,42,35,48,35,42,45,34,45,274,328,212,302,388,314,287,183,229,196,190,201,197];
+const goalEditTotals = [5,6,14,11,21,25,10,15,16,22,15,12,11,14,91,69,48,58,98,81,120,59,75,62,42,30,51];
+const deleteGoalTotals = [2,0,4,2,3,8,3,4,5,5,2,4,5,5,16,5,6,13,15,14,16,14,14,11,9,3,16];
+
+const goalCreatedUsers = [2603,2737,2175,2155,1973,2110,2003,2172,1974,2060,2013,2128,1426,1986,2252,2321,1294,1542,2179,2262,2055,2180,2220,2241,2000,2086,1533];
+const goalSavedUsers = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,314,473,204,317,412,299,258,210,233,199,179,178,213];
+const addGoalUsers = [32,22,38,30,27,35,38,29,38,31,34,38,23,41,200,238,154,217,274,231,202,131,165,165,148,168,155];
+const goalsModuleUsers = [4028,4479,4608,4653,4851,4990,4999,5385,5083,5362,5409,5461,4298,6015,8408,12969,9467,12280,15272,14074,12887,9112,6927,6266,6103,6273,10130];
+
+const reflOpenTotals = [2683,2983,3065,2587,2698,2598,2642,2938,2916,2988,2942,2918,2140,3052,2808,2242,1442,1849,2143,2086,2012,2192,2180,2081,2114,2063,1412];
+const reflBeginTotals = [598,653,643,542,629,591,569,609,607,681,627,598,409,708,610,497,319,409,527,463,448,463,494,424,460,429,273];
+const reflSaveTotals = [1095,1184,1209,1048,1075,1071,1091,1230,1130,1259,1161,1159,853,1139,1033,791,628,668,777,741,727,757,754,726,717,735,460];
+const reflCloseTotals = [2238,2505,2590,2186,2250,2150,2219,2481,2451,2465,2478,2427,1743,2567,2335,1860,1137,1539,1805,1741,1649,1788,1803,1737,1740,1737,1191];
+
+const reflOpenUsers = [1797,2051,2099,1777,1806,1769,1782,1966,1986,1962,1966,1984,1462,2184,1918,1652,1003,1367,1611,1521,1449,1659,1615,1498,1547,1516,1118];
+const reflBeginUsers = [556,614,603,507,583,554,534,571,567,626,577,565,376,652,567,464,301,385,489,426,422,440,470,401,428,407,264];
+const reflSaveUsers = [698,737,789,683,685,673,681,740,722,743,715,716,526,794,670,556,425,482,553,517,499,534,518,470,490,495,356];
+
+const moodUsers = [523,521,576,481,496,494,508,532,518,520,493,491,391,541,455,398,287,328,372,342,340,358,351,312,325,341,231];
+const journalUsers = [611,624,662,579,600,583,586,618,630,647,617,598,463,694,612,501,382,443,490,472,463,494,472,442,448,452,322];
+const activeUsers = [451341,769461,1029503,1169568,626730,450303,535877,581811,801641,556858,434551,501000,325397,358659,412819,835265,310543,346402,241356,260974,288710,227836,275548,300499,334699,341066,591260];
+
+// App context data
+const sessionScheduledUsers = [29091,29808,29586,30208,30346,30054,29506,30332,31063,31487,31386,32188,22469,33606,31348,30839,18031,25172,33905,31117,30802,31123,31803,30805,31480,32521,25155];
+const telehealthStartUsers = [26135,28291,27525,28054,28385,28233,28321,28588,28911,29865,29618,31131,20760,31912,29992,30862,16941,21393,31165,30282,29783,29804,30870,30574,30548,31212,25780];
+const matchFlowCompletedUsers = [6475,6407,5906,5561,6629,6207,6294,5554,5080,5547,5558,5098,2570,5470,5372,4468,2351,5227,5746,6509,5483,5039,6098,5455,5644,5054,3952];
+const appOpenedUsers = [18596,19647,19554,19113,19463,19177,19279,20847,20813,21767,21270,22105,16704,23716,22334,23799,16939,20861,25576,23045,22317,22474,22592,22365,22527,22802,18521];
+const chatSentUsers = [6337,6732,6724,6413,6706,6563,6263,5600,5684,5896,5822,5699,3718,5460,5152,5006,2820,4029,5542,5567,5387,5374,5599,5525,5408,5439,4302];
+const moduleViewedUsers = [18436,19254,19187,19488,19867,19414,19745,20987,21930,22859,22452,23376,18732,25644,24349,23916,16053,20610,25002,23606,23167,23855,24048,23733,24754,25290,20850];
+const contentOpenedUsers = [1035,1077,1054,1088,1123,1017,1068,1069,1097,1170,1130,1136,890,1272,1249,1179,745,1020,1360,1272,1169,1148,1131,1081,1171,1045,741];
+const coachHomeModuleUsers = [0,0,0,0,3,26,25,196,184,189,160,201,167,144,5695,26308,18591,23724,28693,27005,26325,26629,26905,26345,26565,27023,22380];
+const coachTextUsers = [0,0,0,0,3,16,10,46,52,46,28,45,32,43,166,619,473,613,758,719,667,674,724,679,764,810,546];
+const coachVoiceUsers = [0,0,0,0,2,7,7,15,6,8,5,7,3,5,33,99,65,101,128,118,100,122,119,99,135,123,94];
+const prepModuleUsers = [15276,16140,16137,16297,16639,16503,16802,17415,17880,19985,20178,20757,16121,22483,21444,21409,14319,18587,22847,21496,21245,21637,21865,21529,21778,22156,18572];
+const newUsersWeekly = [357532,672269,933367,1074418,531882,355821,438424,482517,703202,458521,334852,379319,230626,263978,315551,701664,235322,259134,143394,163908,192313,130458,175061,189704,237682,242748,507659];
+
+const sessionSchedTotals = [53548,51710,51232,56113,55444,52313,49770,53033,55608,55536,52890,54201,38473,56900,54416,54226,28445,45776,60160,52706,51660,54063,53430,50289,52533,57408,41006];
+const telehealthTotals = [58117,64924,62600,63223,63526,63356,63770,64642,64166,66671,67112,69529,44241,70412,66466,68607,35698,46252,70456,67679,66757,66872,72048,66926,68129,69342,54640];
+const matchFlowTotals = [6551,6488,5977,5597,6693,6257,6342,5603,5128,5656,5933,5710,2897,6331,6312,5138,2661,5806,6276,6988,5897,5331,6496,5794,6040,5368,4231];
+const directBookingTotals = [0,0,0,0,0,0,0,0,10,23,3622,6182,4641,12223,13491,11412,7342,12165,15635,21838,23838,24971,25210,25986,25702,24232,17873];
+const clinicalQTotals = [24885,25839,25957,26171,26113,25982,26220,24963,25377,27818,27714,28150,17544,30102,25588,26048,13249,19472,29509,27346,26436,27111,27501,27056,27219,27855,21162];
+
+// ---- APP CONTEXT ----
+new Chart(document.getElementById('coreLoop'), {
+  type: 'line',
+  data: {
+    labels: weeks,
+    datasets: [
+      { label: 'Session Scheduled', data: sessionScheduledUsers, borderColor: C.sage, fill: false, borderWidth: 3 },
+      { label: 'Telehealth Started', data: telehealthStartUsers, borderColor: C.burgundy, fill: false, borderWidth: 3 },
+      { label: 'App Opened', data: appOpenedUsers, borderColor: C.amber, fill: false, borderWidth: 2 },
+      { label: 'Match Flow Completed', data: matchFlowCompletedUsers, borderColor: C.coral, fill: false, borderWidth: 2 },
+      { label: 'Chat Messages Sent', data: chatSentUsers, borderColor: C.blue, fill: false, borderWidth: 2, borderDash: [4,4] },
+    ]
+  },
+  options: mkOpts()
+});
+
+// Penetration bar -- recent 4-week avg
+const recent4 = (arr) => Math.round((arr[23]+arr[24]+arr[25]+arr[26])/4);
+const appBase = recent4(appOpenedUsers);
+const penData = [
+  { label: 'Prep Module', pct: +(recent4(prepModuleUsers)/appBase*100).toFixed(1) },
+  { label: 'Session Scheduled', pct: +(recent4(sessionScheduledUsers)/appBase*100).toFixed(1) },
+  { label: 'Coach Module Viewed', pct: +(recent4(coachHomeModuleUsers)/appBase*100).toFixed(1) },
+  { label: 'Module Viewed', pct: +(recent4(moduleViewedUsers)/appBase*100).toFixed(1) },
+  { label: 'Chat Sent', pct: +(recent4(chatSentUsers)/appBase*100).toFixed(1) },
+  { label: 'Goal Created', pct: +(recent4(goalCreatedUsers)/appBase*100).toFixed(1) },
+  { label: 'Content Opened', pct: +(recent4(contentOpenedUsers)/appBase*100).toFixed(1) },
+  { label: 'Coach Text Convo', pct: +(recent4(coachTextUsers)/appBase*100).toFixed(1) },
+  { label: 'Reflection Saved', pct: +(recent4(reflSaveUsers)/appBase*100).toFixed(1) },
+  { label: 'Mood Confirmed', pct: +(recent4(moodUsers)/appBase*100).toFixed(1) },
+  { label: 'Journal Started', pct: +(recent4(journalUsers)/appBase*100).toFixed(1) },
+  { label: 'Coach Voice Convo', pct: +(recent4(coachVoiceUsers)/appBase*100).toFixed(1) },
+].sort((a,b) => b.pct - a.pct);
+
+new Chart(document.getElementById('penetrationBar'), {
+  type: 'bar',
+  data: {
+    labels: penData.map(d => d.label),
+    datasets: [{
+      label: '% of App Openers (last 4 weeks)',
+      data: penData.map(d => d.pct),
+      backgroundColor: penData.map(d => {
+        if (d.label.includes('Goal') || d.label.includes('Reflection') || d.label.includes('Mood') || d.label.includes('Journal')) return 'rgba(107,58,77,0.7)';
+        if (d.label.includes('Coach')) return 'rgba(212,168,83,0.7)';
+        return 'rgba(74,124,111,0.5)';
+      }),
+      borderWidth: 0,
+    }]
+  },
+  options: {
+    ...mkOpts(),
+    indexAxis: 'y',
+    plugins: { ...defaultOpts.plugins, legend: { display: false } },
+    scales: { x: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { callback: v => v + '%' } }, y: { grid: { display: false }, ticks: { font: { size: 11 } } } }
+  }
+});
+
+new Chart(document.getElementById('engagementScale'), {
+  type: 'line',
+  data: {
+    labels: weeks,
+    datasets: [
+      { label: 'Goal Created', data: goalCreatedUsers, borderColor: C.sage, fill: false, borderWidth: 2.5 },
+      { label: 'Coach Text Convo', data: coachTextUsers, borderColor: C.amber, fill: false, borderWidth: 2.5 },
+      { label: 'Reflection Saved', data: reflSaveUsers, borderColor: C.burgundy, fill: false, borderWidth: 2.5 },
+      { label: 'Journal Started', data: journalUsers, borderColor: C.coral, fill: false, borderWidth: 2 },
+      { label: 'Mood Confirmed', data: moodUsers, borderColor: C.blue, fill: false, borderWidth: 2, borderDash: [4,4] },
+      { label: 'Coach Voice', data: coachVoiceUsers, borderColor: C.gray, fill: false, borderWidth: 1.5, borderDash: [2,2] },
+    ]
+  },
+  options: mkOpts()
+});
+
+new Chart(document.getElementById('coachGap'), {
+  type: 'line',
+  data: {
+    labels: weeks,
+    datasets: [
+      { label: 'Coach Home Module Viewed', data: coachHomeModuleUsers, borderColor: C.amber, backgroundColor: C.amberA, fill: true, borderWidth: 3 },
+      { label: 'Coach Text Convo', data: coachTextUsers, borderColor: C.sage, fill: false, borderWidth: 2.5 },
+      { label: 'Coach Voice Convo', data: coachVoiceUsers, borderColor: C.burgundy, fill: false, borderWidth: 2 },
+      { label: 'Goal Created (for scale)', data: goalCreatedUsers, borderColor: C.gray, fill: false, borderWidth: 1.5, borderDash: [4,4] },
+    ]
+  },
+  options: mkOpts()
+});
+
+new Chart(document.getElementById('newVsApp'), {
+  type: 'line',
+  data: {
+    labels: weeks,
+    datasets: [
+      { label: 'App Opened', data: appOpenedUsers, borderColor: C.sage, backgroundColor: C.sageA, fill: true, borderWidth: 2.5 },
+      { label: 'Match Flow Started', data: [24099,22544,20871,19429,25421,23371,22040,19082,16491,18739,19078,17060,7995,19268,19658,16792,10180,19075,19431,23748,19296,16713,20516,19338,23985,20147,13196], borderColor: C.amber, fill: false, borderWidth: 2 },
+      { label: 'Account Completed', data: [3078,3202,3190,2939,3386,3333,3241,3183,3136,3416,3020,2625,1554,2513,2566,2109,1235,2158,3267,3279,3021,2899,3108,2843,2791,2860,2180], borderColor: C.coral, fill: false, borderWidth: 2 },
+    ]
+  },
+  options: mkOpts()
+});
+
+new Chart(document.getElementById('coreVolume'), {
+  type: 'line',
+  data: {
+    labels: weeks,
+    datasets: [
+      { label: 'Telehealth Start', data: telehealthTotals, borderColor: C.burgundy, fill: false, borderWidth: 2.5 },
+      { label: 'Session Scheduled', data: sessionSchedTotals, borderColor: C.sage, fill: false, borderWidth: 2.5 },
+      { label: 'Clinical Q Completed', data: clinicalQTotals, borderColor: C.blue, fill: false, borderWidth: 2 },
+      { label: 'Direct Booking', data: directBookingTotals, borderColor: C.amber, fill: false, borderWidth: 2.5 },
+      { label: 'Match Flow Completed', data: matchFlowTotals, borderColor: C.coral, fill: false, borderWidth: 2, borderDash: [4,4] },
+    ]
+  },
+  options: mkOpts()
+});
+
+// ---- OVERVIEW ----
+new Chart(document.getElementById('overviewUsers'), {
+  type: 'line',
+  data: {
+    labels: weeks,
+    datasets: [
+      { label: 'Goal Creators', data: goalCreatedUsers, borderColor: C.sage, backgroundColor: C.sageA, fill: true },
+      { label: 'Reflection Savers', data: reflSaveUsers, borderColor: C.burgundy, backgroundColor: C.burgundyA, fill: true },
+      { label: 'Mood Confirmed', data: moodUsers, borderColor: C.amber, backgroundColor: C.amberA, fill: true },
+      { label: 'Journal Started', data: journalUsers, borderColor: C.coral, backgroundColor: C.coralA, fill: true },
+    ]
+  },
+  options: mkOpts()
+});
+
+new Chart(document.getElementById('overviewPenetration'), {
+  type: 'line',
+  data: {
+    labels: weeks,
+    datasets: [
+      { label: 'Goal Creators %', data: goalCreatedUsers.map((v,i) => appOpenedUsers[i] > 0 ? +(v/appOpenedUsers[i]*100).toFixed(1) : 0), borderColor: C.sage, backgroundColor: C.sageA, fill: false },
+      { label: 'Reflection Savers %', data: reflSaveUsers.map((v,i) => appOpenedUsers[i] > 0 ? +(v/appOpenedUsers[i]*100).toFixed(1) : 0), borderColor: C.burgundy, backgroundColor: C.burgundyA, fill: false },
+      { label: 'Mood Confirmed %', data: moodUsers.map((v,i) => appOpenedUsers[i] > 0 ? +(v/appOpenedUsers[i]*100).toFixed(1) : 0), borderColor: C.amber, backgroundColor: C.amberA, fill: false },
+      { label: 'Coach Text %', data: coachTextUsers.map((v,i) => appOpenedUsers[i] > 0 ? +(v/appOpenedUsers[i]*100).toFixed(1) : 0), borderColor: C.coral, fill: false, borderDash: [4,4] },
+    ]
+  },
+  options: {...mkOpts(), scales: {...defaultOpts.scales, y: {...defaultOpts.scales.y, ticks: { callback: v => v + '%' }}}}
+});
+
+// ---- GOALS ----
+new Chart(document.getElementById('goalEvents'), {
+  type: 'line',
+  data: {
+    labels: weeks,
+    datasets: [
+      { label: 'Goal Created', data: goalCreatedTotals, borderColor: C.sage, fill: false },
+      { label: 'Goal Saved', data: goalSavedTotals, borderColor: C.amber, fill: false },
+      { label: 'Add Goal', data: addGoalTotals, borderColor: C.coral, fill: false },
+      { label: 'Goal Edit', data: goalEditTotals, borderColor: C.blue, fill: false },
+      { label: 'Delete Goal', data: deleteGoalTotals, borderColor: C.gray, fill: false },
+    ]
+  },
+  options: mkOpts()
+});
+
+new Chart(document.getElementById('goalUsers'), {
+  type: 'line',
+  data: {
+    labels: weeks,
+    datasets: [
+      { label: 'Goals Module Viewed', data: goalsModuleUsers, borderColor: C.gray, fill: false, borderDash: [4,4] },
+      { label: 'Goal Created', data: goalCreatedUsers, borderColor: C.sage, backgroundColor: C.sageA, fill: true },
+      { label: 'Add Goal (UI)', data: addGoalUsers, borderColor: C.coral, fill: false },
+      { label: 'Goal Saved', data: goalSavedUsers, borderColor: C.amber, fill: false },
+    ]
+  },
+  options: mkOpts()
+});
+
+// Goal frequency
+const freqMonths = ['Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+new Chart(document.getElementById('goalFreq'), {
+  type: 'bar',
+  data: {
+    labels: freqMonths,
+    datasets: [
+      { label: '1 time', data: [2501,2312,2101,3438,3800,3545,814], backgroundColor: 'rgba(74,124,111,0.8)' },
+      { label: '2 times', data: [3141,2849,2583,4092,4419,4337,767], backgroundColor: 'rgba(107,58,77,0.8)' },
+      { label: '3 times', data: [4391,3854,3062,840,538,431,85], backgroundColor: 'rgba(212,168,83,0.8)' },
+      { label: '4+ times', data: [276,227,191,183,213,140,29], backgroundColor: 'rgba(193,123,110,0.8)' },
+    ]
+  },
+  options: {...mkOpts(), scales: {...defaultOpts.scales, x: { stacked: true, grid: { display: false }}, y: { stacked: true, grid: { color: 'rgba(0,0,0,0.05)' }}}}
+});
+
+// Goal funnel
+new Chart(document.getElementById('goalFunnel'), {
+  type: 'bar',
+  data: {
+    labels: ['Module Viewed','Add Goal','Goal Created','Goal Saved'],
+    datasets: [{
+      label: 'Users (6-month total)',
+      data: [80213, 655, 88, 658],
+      backgroundColor: [C.sageA, C.sageA, C.sageA, C.sageA].map((_, i) => `rgba(74,124,111,${0.3 + i*0.2})`),
+      borderColor: C.sage,
+      borderWidth: 1,
+    }]
+  },
+  options: {
+    ...mkOpts(),
+    indexAxis: 'y',
+    plugins: {
+      ...defaultOpts.plugins,
+      tooltip: {
+        callbacks: {
+          afterLabel: function(ctx) {
+            const vals = [80213, 655, 88, 658];
+            if (ctx.dataIndex === 0) return '';
+            return `${(vals[ctx.dataIndex]/vals[0]*100).toFixed(2)}% of module viewers`;
+          }
+        }
+      }
+    }
+  }
+});
+
+// ---- REFLECTIONS ----
+new Chart(document.getElementById('reflEvents'), {
+  type: 'line',
+  data: {
+    labels: weeks,
+    datasets: [
+      { label: 'Open', data: reflOpenTotals, borderColor: C.gray, fill: false, borderDash: [4,4] },
+      { label: 'Begin', data: reflBeginTotals, borderColor: C.blue, fill: false },
+      { label: 'Save', data: reflSaveTotals, borderColor: C.sage, backgroundColor: C.sageA, fill: true },
+      { label: 'Close', data: reflCloseTotals, borderColor: C.coral, fill: false, borderDash: [2,2] },
+    ]
+  },
+  options: mkOpts()
+});
+
+new Chart(document.getElementById('reflUsers'), {
+  type: 'line',
+  data: {
+    labels: weeks,
+    datasets: [
+      { label: 'Opened', data: reflOpenUsers, borderColor: C.gray, fill: false },
+      { label: 'Began', data: reflBeginUsers, borderColor: C.blue, fill: false },
+      { label: 'Saved', data: reflSaveUsers, borderColor: C.sage, backgroundColor: C.sageA, fill: true },
+    ]
+  },
+  options: mkOpts()
+});
+
+// Reflection funnel
+new Chart(document.getElementById('reflFunnel'), {
+  type: 'bar',
+  data: {
+    labels: ['Reflection Open','Begin Writing','Save Reflection'],
+    datasets: [{
+      label: 'Users (6-month total)',
+      data: [29209, 11986, 7260],
+      backgroundColor: ['rgba(107,58,77,0.3)','rgba(107,58,77,0.55)','rgba(107,58,77,0.8)'],
+      borderColor: C.burgundy,
+      borderWidth: 1,
+    }]
+  },
+  options: {
+    ...mkOpts(),
+    indexAxis: 'y',
+    plugins: {
+      ...defaultOpts.plugins,
+      tooltip: {
+        callbacks: {
+          afterLabel: function(ctx) {
+            const vals = [29209, 11986, 7260];
+            return `${(vals[ctx.dataIndex]/vals[0]*100).toFixed(1)}% of openers`;
+          }
+        }
+      }
+    }
+  }
+});
+
+// Reflection completion rate over time
+new Chart(document.getElementById('reflCompRate'), {
+  type: 'line',
+  data: {
+    labels: weeks,
+    datasets: [{
+      label: 'Save/Open %',
+      data: reflSaveTotals.map((v,i) => reflOpenTotals[i] > 0 ? +(v/reflOpenTotals[i]*100).toFixed(1) : 0),
+      borderColor: C.burgundy,
+      backgroundColor: C.burgundyA,
+      fill: true,
+    }, {
+      label: 'Begin/Open %',
+      data: reflBeginTotals.map((v,i) => reflOpenTotals[i] > 0 ? +(v/reflOpenTotals[i]*100).toFixed(1) : 0),
+      borderColor: C.blue,
+      fill: false,
+      borderDash: [4,4],
+    }]
+  },
+  options: {...mkOpts(), scales: {...defaultOpts.scales, y: { ...defaultOpts.scales.y, ticks: { callback: v => v + '%' }, max: 60 }}}
+});
+
+// ---- RETENTION ----
+const retBrackets = ['Day 0','D1-7','D7-14','D14-30','D30-60','D60-90'];
+const goalRetRates = [100, 0.9, 0.6, 0.8, 0.5, 0.3];
+const reflRetRates = [100, 39.1, 32.0, 33.9, 29.8, 21.8];
+
+new Chart(document.getElementById('goalRetention'), {
+  type: 'bar',
+  data: {
+    labels: retBrackets,
+    datasets: [{
+      label: 'Retention %',
+      data: goalRetRates,
+      backgroundColor: goalRetRates.map(v => v < 5 && v > 0 ? 'rgba(192,57,43,0.7)' : 'rgba(74,124,111,0.7)'),
+      borderColor: goalRetRates.map(v => v < 5 && v > 0 ? 'rgba(192,57,43,1)' : C.sage),
+      borderWidth: 1,
+    }]
+  },
+  options: {...mkOpts(), scales: {...defaultOpts.scales, y: { ...defaultOpts.scales.y, ticks: { callback: v => v + '%' }}}}
+});
+
+new Chart(document.getElementById('reflRetention'), {
+  type: 'bar',
+  data: {
+    labels: retBrackets,
+    datasets: [{
+      label: 'Retention %',
+      data: reflRetRates,
+      backgroundColor: 'rgba(107,58,77,0.7)',
+      borderColor: C.burgundy,
+      borderWidth: 1,
+    }]
+  },
+  options: {...mkOpts(), scales: {...defaultOpts.scales, y: { ...defaultOpts.scales.y, ticks: { callback: v => v + '%' }}}}
+});
+
+new Chart(document.getElementById('retentionCompare'), {
+  type: 'line',
+  data: {
+    labels: retBrackets,
+    datasets: [
+      { label: 'Goal Setting', data: goalRetRates, borderColor: C.sage, backgroundColor: C.sageA, fill: true, borderWidth: 3 },
+      { label: 'Daily Reflections', data: reflRetRates, borderColor: C.burgundy, backgroundColor: C.burgundyA, fill: true, borderWidth: 3 },
+    ]
+  },
+  options: {...mkOpts(), scales: {...defaultOpts.scales, y: { ...defaultOpts.scales.y, ticks: { callback: v => v + '%' }}}}
+});
+
+// ---- MOOD ----
+new Chart(document.getElementById('moodUsers'), {
+  type: 'line',
+  data: {
+    labels: weeks,
+    datasets: [
+      { label: 'Mood Confirmed', data: moodUsers, borderColor: C.amber, backgroundColor: C.amberA, fill: true },
+      { label: 'Mood Slider Adjusted', data: [614,624,660,550,571,576,604,615,612,596,569,561,444,634,528,461,317,385,440,391,398,425,421,356,381,391,267], borderColor: C.coral, fill: false },
+      { label: 'Journal Started', data: journalUsers, borderColor: C.sage, backgroundColor: C.sageA, fill: true },
+    ]
+  },
+  options: mkOpts()
+});
+
+new Chart(document.getElementById('featureCompare'), {
+  type: 'line',
+  data: {
+    labels: weeks,
+    datasets: [
+      { label: 'Goal Created', data: goalCreatedUsers, borderColor: C.sage, fill: false, borderWidth: 3 },
+      { label: 'Reflection Saved', data: reflSaveUsers, borderColor: C.burgundy, fill: false, borderWidth: 3 },
+      { label: 'Mood Confirmed', data: moodUsers, borderColor: C.amber, fill: false, borderWidth: 2, borderDash: [4,4] },
+      { label: 'Journal Started', data: journalUsers, borderColor: C.coral, fill: false, borderWidth: 2, borderDash: [4,4] },
+    ]
+  },
+  options: mkOpts()
+});
+
+// Tab navigation
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  // Trigger resize for charts to render properly
+  window.dispatchEvent(new Event('resize'));
+}
+</script>
+
+</body>
+</html>
